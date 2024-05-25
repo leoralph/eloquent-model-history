@@ -1,9 +1,9 @@
 <?php
 
-namespace Panoscape\History\Tests;
+namespace LeoRalph\History\Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Panoscape\History\HasHistories;
+use LeoRalph\History\HasHistories;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model

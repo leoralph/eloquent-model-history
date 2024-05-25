@@ -1,6 +1,6 @@
 <?php
 
-namespace Panoscape\History;
+namespace LeoRalph\History;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -15,17 +15,17 @@ class HistoryServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/history.php' => config_path('history.php')
+            __DIR__ . '/config/history.php' => config_path('history.php')
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/migrations' => database_path('migrations')
+            __DIR__ . '/migrations' => database_path('migrations')
         ], 'migrations');
 
-        $this->loadTranslationsFrom(__DIR__.'/lang', 'panoscape');
+        $this->loadTranslationsFrom(__DIR__ . '/lang', 'panoscape');
 
         $this->publishes([
-            __DIR__.'/lang' => resource_path('lang/vendor/panoscape'),
+            __DIR__ . '/lang' => resource_path('lang/vendor/panoscape'),
         ], 'translations');
 
         Event::subscribe(Listeners\HistoryEventSubscriber::class);

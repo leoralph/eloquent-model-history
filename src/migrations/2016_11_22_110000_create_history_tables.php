@@ -14,12 +14,12 @@ class CreateHistoryTables extends Migration
     public function up()
     {
         Schema::create('model_histories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->morphs('model');
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->string('user_type')->nullable();
+            $table->morphs('user');
             $table->string('message');
-            $table->text('meta')->nullable();
+            $table->json('old')->nullable();
+            $table->json('changes')->nullable();
             $table->timestamp('performed_at');
         });
     }

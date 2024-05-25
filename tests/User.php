@@ -1,10 +1,10 @@
 <?php
 
-namespace Panoscape\History\Tests;
+namespace LeoRalph\History\Tests;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Panoscape\History\HasOperations;
+use LeoRalph\History\HasOperations;
 
 class User extends Authenticatable
 {

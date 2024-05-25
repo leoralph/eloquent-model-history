@@ -1,6 +1,6 @@
 <?php
 
-namespace Panoscape\History;
+namespace LeoRalph\History;
 
 trait HasHistories
 {
@@ -19,19 +19,19 @@ trait HasHistories
      */
     public static function bootHasHistories()
     {
-        if(!config('history.enabled')) {
+        if (!config('history.enabled')) {
             return;
         }
 
-        if(in_array(app()->environment(), config('history.env_blacklist'))) {
+        if (in_array(app()->environment(), config('history.env_blacklist'))) {
             return;
         }
 
-        if(app()->runningInConsole() && !config('history.console_enabled')) {
+        if (app()->runningInConsole() && !config('history.console_enabled')) {
             return;
         }
 
-        if(app()->runningUnitTests() && !config('history.test_enabled')) {
+        if (app()->runningUnitTests() && !config('history.test_enabled')) {
             return;
         }
 
@@ -45,17 +45,17 @@ trait HasHistories
      */
     public function getModelMeta($event)
     {
-        switch($event)
-        {
+        switch ($event) {
             case 'updating':
                 /*
-                * Gets the model's altered values and tracks what had changed
-                */
+                 * Gets the model's altered values and tracks what had changed
+                 */
                 $changes = $this->getDirty();
 
                 $changed = [];
                 foreach ($changes as $key => $value) {
-                    if(static::isIgnored($this, $key)) continue;
+                    if (static::isIgnored($this, $key))
+                        continue;
 
                     array_push($changed, ['key' => $key, 'old' => $this->getOriginal($key), 'new' => $this->$key]);
                 }
@@ -71,7 +71,7 @@ trait HasHistories
     {
         $blacklist = config('history.attributes_blacklist');
         $name = get_class($model);
-        $array = isset($blacklist[$name])? $blacklist[$name]: null;
+        $array = isset($blacklist[$name]) ? $blacklist[$name] : null;
         return !empty($array) && in_array($key, $array);
     }
 

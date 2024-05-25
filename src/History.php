@@ -1,16 +1,16 @@
 <?php
 
-namespace Panoscape\History;
+namespace LeoRalph\History;
 
 use Illuminate\Database\Eloquent\Model;
 
 class History extends Model
 {
     /**
-    * Indicates if the model should be timestamped.
-    *
-    * @var bool
-    */
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
     public $timestamps = false;
 
     /**
@@ -24,17 +24,17 @@ class History extends Model
     ];
 
     /**
-    * The attributes that are not mass assignable.
-    *
-    * @var array
-    */
+     * The attributes that are not mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
 
     /**
-    * The attributes that should be hidden for arrays.
-    *
-    * @var array
-    */
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
     protected $hidden = [];
 
     /**
@@ -54,7 +54,7 @@ class History extends Model
      */
     public function user()
     {
-        return $this->hasUser()? $this->morphTo()->first(): null;
+        return $this->hasUser() ? $this->morphTo()->first() : null;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Panoscape\History;
+namespace LeoRalph\History;
 
 trait HasOperations
 {

@@ -12,7 +12,7 @@
          processIsolation="false"
          stopOnFailure="false">
         <testsuites>
-            <testsuite name="Panoscape\History Test Suite">
+            <testsuite name="LeoRalph\History Test Suite">
                 <directory suffix="Test.php">tests/</directory>
             </testsuite>
         </testsuites>

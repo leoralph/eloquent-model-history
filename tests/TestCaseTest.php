@@ -1,14 +1,14 @@
 <?php
 
-namespace Panoscape\History\Tests;
+namespace LeoRalph\History\Tests;
 
 use Orchestra\Testbench\TestCase;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Panoscape\History\History;
-use Panoscape\History\HistoryServiceProvider;
-use Panoscape\History\Events\ModelChanged;
+use LeoRalph\History\History;
+use LeoRalph\History\HistoryServiceProvider;
+use LeoRalph\History\Events\ModelChanged;
 
 class TestCaseTest extends TestCase
 {
@@ -37,35 +37,35 @@ class TestCaseTest extends TestCase
                 'password'
             ]
         ]);
-        $app['config']->set('history.auth_guards', ['web','admin']);
+        $app['config']->set('history.auth_guards', ['web', 'admin']);
         // custom auth guard mock
         $app['config']->set('auth.guards.admin.driver', 'admin-login');
-        Auth::viaRequest('admin-login', function(Request $request) {
+        Auth::viaRequest('admin-login', function (Request $request) {
             return null;
         });
 
-        $app['router']->post('articles', function(Request $request) {
+        $app['router']->post('articles', function (Request $request) {
             return Article::create(['title' => $request->title]);
         });
-        $app['router']->put('articles/{id}', function(Request $request, $id) {
+        $app['router']->put('articles/{id}', function (Request $request, $id) {
             $model = Article::find($id);
             $model->title = $request->title;
             $model->save();
             return $model;
         });
-        $app['router']->delete('articles/{id}', function($id) {
+        $app['router']->delete('articles/{id}', function ($id) {
             Article::destroy($id);
-        });        
-        $app['router']->post('articles/{id}/restore', function($id) {
+        });
+        $app['router']->post('articles/{id}/restore', function ($id) {
             Article::withTrashed()->find($id)->restore();
-        });        
-        $app['router']->get('articles/{id}', function($id) {
+        });
+        $app['router']->get('articles/{id}', function ($id) {
             $model = Article::find($id);
-            if(!is_null($model)) {
+            if (!is_null($model)) {
                 event(new ModelChanged($model, 'Query Article ' . $model->title, $model->pluck('id')->toArray()));
             }
             return $model;
-        });  
+        });
     }
 
     public function setUp(): void
@@ -75,7 +75,7 @@ class TestCaseTest extends TestCase
     }
 
     protected function setUpDatabase()
-    {   
+    {
         $builder = $this->app['db']->connection()->getSchemaBuilder();
 
         $builder->create('users', function (Blueprint $table) {
@@ -92,7 +92,7 @@ class TestCaseTest extends TestCase
 
         User::create(['name' => 'Esther', 'password' => '6ecd6a17b723']);
 
-        $this->loadMigrationsFrom(realpath(__DIR__.'/../src/migrations'));
+        $this->loadMigrationsFrom(realpath(__DIR__ . '/../src/migrations'));
     }
 
     public function testHistory()
@@ -150,7 +150,7 @@ class TestCaseTest extends TestCase
         $this->assertNotNull($history->user());
         $this->assertEquals($user->toJson(), $history->user()->toJson());
         $this->assertEquals($article->makeHidden('histories')->toJson(), $history->model()->toJson());
-        
+
         $operations = $user->operations;
         $this->assertNotNull($operations);
         $this->assertEquals(1, count($operations));
@@ -191,7 +191,7 @@ class TestCaseTest extends TestCase
         $this->assertNotNull($history->user());
         $this->assertEquals($user->toJson(), $history->user()->toJson());
         $this->assertEquals($article->makeHidden('histories')->toJson(), $history->model()->toJson());
-        
+
         $operations = $user->operations;
         $this->assertNotNull($operations);
         $this->assertEquals(1, count($operations));
@@ -212,7 +212,8 @@ class TestCaseTest extends TestCase
         $this->assertEquals([$article->id], $history->meta);
     }
 
-    private function actingAsAdmin($admin) {
+    private function actingAsAdmin($admin)
+    {
         $defaultGuard = config('auth.defaults.guard');
         $this->actingAs($admin, 'admin');
         Auth::shouldUse($defaultGuard);

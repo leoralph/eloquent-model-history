@@ -1,10 +1,10 @@
 <?php
 
-namespace Panoscape\History\Listeners;
+namespace LeoRalph\History\Listeners;
 
-use Panoscape\History\Events\ModelChanged;
-use Panoscape\History\HistoryObserver;
-use Panoscape\History\History;
+use LeoRalph\History\Events\ModelChanged;
+use LeoRalph\History\HistoryObserver;
+use LeoRalph\History\History;
 
 class HistoryEventSubscriber
 {
@@ -16,9 +16,10 @@ class HistoryEventSubscriber
      */
     public function onModelChanged($event)
     {
-        if(!HistoryObserver::filter(null)) return;
+        if (!HistoryObserver::filter(null))
+            return;
 
-        $message = $event->trans == null? $event->message : trans('panoscape::history.'.$event->trans, ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]);
+        $message = $event->trans == null ? $event->message : trans('panoscape::history.' . $event->trans, ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]);
         $event->model->morphMany(History::class, 'model')->create([
             'message' => $message,
             'meta' => $event->meta,
@@ -36,8 +37,8 @@ class HistoryEventSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            \Panoscape\History\Events\ModelChanged::class,
-            static::class.'@onModelChanged'
+            \LeoRalph\History\Events\ModelChanged::class,
+            static::class . '@onModelChanged'
         );
     }
 }

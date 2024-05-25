@@ -30,36 +30,35 @@ composer require "panoscape/history:^1.0"
 
 > Only required for Laravel 5.6.x
 
-
-*config/app.php*
+_config/app.php_
 
 ```php
 'providers' => [
     ...
-    Panoscape\History\HistoryServiceProvider::class,
+    LeoRalph\History\HistoryServiceProvider::class,
 ];
 'aliases' => [
     ...
-    'App\History' => Panoscape\History\History::class,
+    'App\History' => LeoRalph\History\History::class,
 ];
 ```
 
 ### Migration
 
 ```shell
-php artisan vendor:publish --provider="Panoscape\History\HistoryServiceProvider" --tag=migrations
+php artisan vendor:publish --provider="LeoRalph\History\HistoryServiceProvider" --tag=migrations
 ```
 
 ### Config
 
 ```shell
-php artisan vendor:publish --provider="Panoscape\History\HistoryServiceProvider" --tag=config
+php artisan vendor:publish --provider="LeoRalph\History\HistoryServiceProvider" --tag=config
 ```
 
 ## Localization
 
 ```shell
-php artisan vendor:publish --provider="Panoscape\History\HistoryServiceProvider" --tag=translations
+php artisan vendor:publish --provider="LeoRalph\History\HistoryServiceProvider" --tag=translations
 ```
 
 ## Usage
@@ -74,7 +73,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Panoscape\History\HasOperations;
+use LeoRalph\History\HasOperations;
 
 class User extends Authenticatable
 {
@@ -90,7 +89,7 @@ Add `HasHistories` trait to the model that will be tracked.
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Panoscape\History\HasHistories;
+use LeoRalph\History\HasHistories;
 
 class Article extends Model
 {
@@ -183,7 +182,7 @@ Example meta
 Besides the built in `created/updating/deleting/restoring` events, you may track custom history record by firing an `ModelChanged` event.
 
 ```php
-use Panoscape\History\Events\ModelChanged;
+use LeoRalph\History\Events\ModelChanged;
 
 ...
 //fire a model changed event
@@ -272,7 +271,7 @@ You may set whitelist and blacklist in config file. Please follow the descriptio
 |--------------------------------------------------------------
 | Attributes blacklist
 |--------------------------------------------------------------
-| 
+|
 | Please add the whole class names. Example: \App\User:class
 | For each model, attributes in its respect array will NOT be recorded into meta when performing update operation.
 |
@@ -349,7 +348,7 @@ class Article extends Model
     };
 
     ...
-    
+
     public function getModelMeta($event)
     {
         // using defaults for updating

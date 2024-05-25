@@ -1,5 +1,5 @@
 {
-    "name": "panoscape/history",
+    "name": "leoralph/eloquent-model-history",
     "description": "Eloquent model history tracking for Laravel",
     "keywords": ["laravel", "log", "history", "tracking", "eloquent", "model"],
     "homepage": "https://github.com/seancheung/history",
@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Panoscape\\History\\": "src/"
+            "LeoRalph\\History\\": "src/"
         }
     },
     "scripts": {
@@ -26,7 +26,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Panoscape\\History\\Tests\\": "tests/"
+            "LeoRalph\\History\\Tests\\": "tests/"
         }  
     },
     "require-dev": {
@@ -38,10 +38,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Panoscape\\History\\HistoryServiceProvider"
+                "LeoRalph\\History\\HistoryServiceProvider"
             ],
             "aliases": {
-                "History": "Panoscape\\History\\History"
+                "History": "LeoRalph\\History\\History"
             }
         }
     }

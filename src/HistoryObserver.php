@@ -1,6 +1,6 @@
 <?php
 
-namespace Panoscape\History;
+namespace LeoRalph\History;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\Auth;
 class HistoryObserver
 {
     /**
-    * Listen to the Model created event.
-    *
-    * @param  mixed $model
-    * @return void
-    */
+     * Listen to the Model created event.
+     *
+     * @param  mixed $model
+     * @return void
+     */
     public function created($model)
     {
-        if(!static::filter('created')) return;
+        if (!static::filter('created'))
+            return;
 
         $model->morphMany(History::class, 'model')->create([
             'message' => trans('panoscape::history.created', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
@@ -27,23 +28,25 @@ class HistoryObserver
     }
 
     /**
-    * Listen to the Model updating event.
-    *
-    * @param  mixed $model
-    * @return void
-    */
+     * Listen to the Model updating event.
+     *
+     * @param  mixed $model
+     * @return void
+     */
     public function updating($model)
     {
-        if(!static::filter('updating')) return;
+        if (!static::filter('updating'))
+            return;
 
         /*
-        * Gets the model's altered values and tracks what had changed
-        */
+         * Gets the model's altered values and tracks what had changed
+         */
         $changes = $model->getDirty();
         /**
          * Bypass restoring event
          */
-        if(array_key_exists('deleted_at', $changes)) return;
+        if (array_key_exists('deleted_at', $changes))
+            return;
         /**
          * Get meta values that will be stored
          */
@@ -51,7 +54,8 @@ class HistoryObserver
         /**
          * Bypass updating event when meta is empty
          */
-        if (!$meta) return;
+        if (!$meta)
+            return;
 
         $model->morphMany(History::class, 'model')->create([
             'message' => trans('panoscape::history.updating', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
@@ -63,14 +67,15 @@ class HistoryObserver
     }
 
     /**
-    * Listen to the Model deleting event.
-    *
-    * @param  mixed $model
-    * @return void
-    */
+     * Listen to the Model deleting event.
+     *
+     * @param  mixed $model
+     * @return void
+     */
     public function deleting($model)
     {
-        if(!static::filter('deleting')) return;
+        if (!static::filter('deleting'))
+            return;
 
         $model->morphMany(History::class, 'model')->create([
             'message' => trans('panoscape::history.deleting', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
@@ -82,14 +87,15 @@ class HistoryObserver
     }
 
     /**
-    * Listen to the Model restored event.
-    *
-    * @param  mixed $model
-    * @return void
-    */
+     * Listen to the Model restored event.
+     *
+     * @param  mixed $model
+     * @return void
+     */
     public function restored($model)
     {
-        if(!static::filter('restored')) return;
+        if (!static::filter('restored'))
+            return;
 
         $model->morphMany(History::class, 'model')->create([
             'message' => trans('panoscape::history.restored', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
@@ -103,8 +109,8 @@ class HistoryObserver
     public static function getModelName($model)
     {
         $class = class_basename($model);
-        $key = 'panoscape::history.models.'.Str::snake($class);
-        $value =  trans($key);
+        $key = 'panoscape::history.models.' . Str::snake($class);
+        $value = trans($key);
 
         return $key == $value ? $class : $value;
     }
@@ -121,12 +127,11 @@ class HistoryObserver
 
     public static function filter($action)
     {
-        if(!static::getAuth()->check()) {
-            if(in_array('nobody', config('history.user_blacklist'))) {
+        if (!static::getAuth()->check()) {
+            if (in_array('nobody', config('history.user_blacklist'))) {
                 return false;
             }
-        }
-        elseif(in_array(get_class(static::getAuth()->user()), config('history.user_blacklist'))) {
+        } elseif (in_array(get_class(static::getAuth()->user()), config('history.user_blacklist'))) {
             return false;
         }
 
@@ -136,21 +141,21 @@ class HistoryObserver
     private static function getAuth()
     {
         $guards = config('history.auth_guards');
-        if(is_bool($guards) && $guards == true)
+        if (is_bool($guards) && $guards == true)
             return auth(static::activeGuard());
-        if(is_array($guards))
-        {
-            foreach($guards as $guard)
-                if(auth($guard)->check()) return auth($guard);
+        if (is_array($guards)) {
+            foreach ($guards as $guard)
+                if (auth($guard)->check())
+                    return auth($guard);
         }
         return auth();
     }
 
     private static function activeGuard()
     {
-        foreach(array_keys(config('auth.guards')) as $guard)
-        {
-            if(auth($guard)->check()) return $guard;
+        foreach (array_keys(config('auth.guards')) as $guard) {
+            if (auth($guard)->check())
+                return $guard;
         }
         return null;
     }

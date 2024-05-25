@@ -1,6 +1,6 @@
 <?php
 
-namespace Panoscape\History\Events;
+namespace LeoRalph\History\Events;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Database\Eloquent\Model;
