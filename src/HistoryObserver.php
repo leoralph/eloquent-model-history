@@ -19,9 +19,7 @@ class HistoryObserver
         if (!static::filter('created'))
             return;
 
-        $model->createHistory(
-            trans('panoscape::history.created'),
-        );
+        $model->createHistory('created');
     }
 
     /**
@@ -53,7 +51,7 @@ class HistoryObserver
             return;
 
         $model->createHistory(
-            trans('panoscape::history.updating'),
+            'updated',
             $previous,
             $changes,
         );
@@ -70,9 +68,7 @@ class HistoryObserver
         if (!static::filter('deleting'))
             return;
 
-        $model->createHistory(
-            trans('panoscape::history.deleting'),
-        );
+        $model->createHistory('deleted');
     }
 
     /**
@@ -86,9 +82,7 @@ class HistoryObserver
         if (!static::filter('restored'))
             return;
 
-        $model->createHistory(
-            trans('panoscape::history.restored'),
-        );
+        $model->createHistory('restored');
     }
 
     public static function getModelName($model)

@@ -4,11 +4,19 @@ namespace LeoRalph\History;
 
 trait HasHistories
 {
-    private string $historyMessage = '';
+    private ?string $historyOperation = null;
+    private ?string $historyDescription = null;
 
-    public function setHistoryMessage(string $message): static
+    public function withHistoryOperation(string $operation): static
     {
-        $this->historyMessage = $message;
+        $this->historyOperation = $operation;
+
+        return $this;
+    }
+
+    public function withHistoryDescription(string $description): static
+    {
+        $this->historyDescription = $description;
 
         return $this;
     }
@@ -84,27 +92,36 @@ trait HasHistories
         return !empty($array) && in_array($key, $array);
     }
 
-    public function createHistory(?string $message = null, array $previous = [], array $changes = [])
-    {
+    public function createHistory(
+        ?string $operation = null,
+        array $previous = [],
+        array $changes = [],
+    ): History {
         $user = auth()->user();
 
         [$userId, $userType] = $user
             ? [$user->id, get_class($user)]
             : [null, null];
 
-        $message = $message ?? $this->historyMessage;
+        $operation = $operation ?? $this->historyOperation;
 
-        if (empty($message)) {
-            throw new \Exception('Trying to create a history without a message.');
+        if (empty($operation)) {
+            throw new \Exception('Trying to create a history without an operation.');
         }
 
-        $this->histories()->create([
-            'message' => $message,
+        $history = $this->histories()->create([
+            'operation' => $operation,
+            'description' => $this->historyDescription,
             'previous' => $previous,
             'changes' => $changes,
             'user_id' => $userId,
             'user_type' => $userType,
             'performed_at' => now(),
         ]);
+
+        $this->historyOperation = null;
+        $this->historyDescription = null;
+
+        return $history;
     }
 }

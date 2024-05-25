@@ -17,9 +17,10 @@ class CreateHistoryTables extends Migration
             $table->id();
             $table->morphs('model');
             $table->nullableMorphs('user');
-            $table->string('message');
+            $table->string('operation')->index();
             $table->json('previous')->nullable();
             $table->json('changes')->nullable();
+            $table->text('description')->nullable();
             $table->timestamp('performed_at');
         });
     }
