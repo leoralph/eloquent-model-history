@@ -2,6 +2,7 @@
 
 namespace LeoRalph\History;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,18 +14,14 @@ class HistoryObserver
      * @param  mixed $model
      * @return void
      */
-    public function created($model)
+    public function created(Model $model): void
     {
         if (!static::filter('created'))
             return;
 
-        $model->morphMany(History::class, 'model')->create([
-            'message' => trans('panoscape::history.created', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
-            'meta' => $model->getModelMeta('created'),
-            'user_id' => static::getUserID(),
-            'user_type' => static::getUserType(),
-            'performed_at' => now(),
-        ]);
+        $model->createHistory(
+            trans('panoscape::history.created'),
+        );
     }
 
     /**
@@ -33,7 +30,7 @@ class HistoryObserver
      * @param  mixed $model
      * @return void
      */
-    public function updating($model)
+    public function updating(Model $model)
     {
         if (!static::filter('updating'))
             return;
@@ -47,23 +44,19 @@ class HistoryObserver
          */
         if (array_key_exists('deleted_at', $changes))
             return;
-        /**
-         * Get meta values that will be stored
-         */
-        $meta = $model->getModelMeta('updating');
+
+        $previous = array_intersect_key($model->getRawOriginal(), $changes);
         /**
          * Bypass updating event when meta is empty
          */
-        if (!$meta)
+        if (!$changes)
             return;
 
-        $model->morphMany(History::class, 'model')->create([
-            'message' => trans('panoscape::history.updating', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
-            'meta' => $meta,
-            'user_id' => static::getUserID(),
-            'user_type' => static::getUserType(),
-            'performed_at' => now(),
-        ]);
+        $model->createHistory(
+            trans('panoscape::history.updating'),
+            $previous,
+            $changes,
+        );
     }
 
     /**
@@ -77,13 +70,9 @@ class HistoryObserver
         if (!static::filter('deleting'))
             return;
 
-        $model->morphMany(History::class, 'model')->create([
-            'message' => trans('panoscape::history.deleting', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
-            'meta' => $model->getModelMeta('deleting'),
-            'user_id' => static::getUserID(),
-            'user_type' => static::getUserType(),
-            'performed_at' => now(),
-        ]);
+        $model->createHistory(
+            trans('panoscape::history.deleting'),
+        );
     }
 
     /**
@@ -97,13 +86,9 @@ class HistoryObserver
         if (!static::filter('restored'))
             return;
 
-        $model->morphMany(History::class, 'model')->create([
-            'message' => trans('panoscape::history.restored', ['model' => static::getModelName($model), 'label' => $model->getModelLabel()]),
-            'meta' => $model->getModelMeta('restored'),
-            'user_id' => static::getUserID(),
-            'user_type' => static::getUserType(),
-            'performed_at' => now(),
-        ]);
+        $model->createHistory(
+            trans('panoscape::history.restored'),
+        );
     }
 
     public static function getModelName($model)

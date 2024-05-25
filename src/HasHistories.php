@@ -4,6 +4,15 @@ namespace LeoRalph\History;
 
 trait HasHistories
 {
+    private string $historyMessage = '';
+
+    public function setHistoryMessage(string $message): static
+    {
+        $this->historyMessage = $message;
+
+        return $this;
+    }
+
     /**
      * Get all of the model's histories.
      */
@@ -75,10 +84,27 @@ trait HasHistories
         return !empty($array) && in_array($key, $array);
     }
 
-    /**
-     * Get the model's label in history.
-     *
-     * @return string
-     */
-    public abstract function getModelLabel();
+    public function createHistory(?string $message = null, array $previous = [], array $changes = [])
+    {
+        $user = auth()->user();
+
+        [$userId, $userType] = $user
+            ? [$user->id, get_class($user)]
+            : [null, null];
+
+        $message = $message ?? $this->historyMessage;
+
+        if (empty($message)) {
+            throw new \Exception('Trying to create a history without a message.');
+        }
+
+        $this->histories()->create([
+            'message' => $message,
+            'previous' => $previous,
+            'changes' => $changes,
+            'user_id' => $userId,
+            'user_type' => $userType,
+            'performed_at' => now(),
+        ]);
+    }
 }
